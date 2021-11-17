@@ -1,60 +1,76 @@
 //react component
 import React , {useState} from 'react'
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import uniqid from 'uniqid'
 
+//weather api url
+const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
+const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
 
 export default function CityList() {
 
 
-        const [nombre, setNombre] = useState('')
-        const [listaNombre, setListaNombre] = useState([])
+    
+
+        const [ciudad, setCiudad] = useState('')
+        const [listaCiudades, setListaCiudades] = useState([])
         const [editar, setEditar] = useState(false)
         const [id, setId] = useState('')
         const [error, setError] = useState(null)
     
-        const addNombre = (event) => {
+        const addCiudad = (event) => {
             
             event.preventDefault()
-            const nuevoNombre = {
+            const nuevoCiudad = {
                 id:uniqid(),
-                name: nombre
+                name: ciudad
             }
-            if(!nombre.trim()){
+            if(!ciudad.trim()){
                 setError("El Campo esta vacio")
                 return
             }
-            else{setListaNombre([...listaNombre,nuevoNombre])
-            setNombre('')
+            else{setListaCiudades([...listaCiudades,nuevoCiudad])
+            setCiudad('')
             setError(null)
     }
             
         }
     
-            const deleteNombre =(id)=>{
-                const nuevoArray = listaNombre.filter(item => item.id !== id)
-                setListaNombre(nuevoArray)
+            const deleteCiudad =(id)=>{
+                const nuevoArray = listaCiudades.filter(item => item.id !== id)
+                setListaCiudades(nuevoArray)
             }
     
             const edit = (item) =>{
                 setEditar(true)
-                setNombre(item.name)
+                setCiudad(item.name)
                 setId(item.id)
             }
     
-            const editarNombre = (e) =>{
+            const editarCiudad = (e) =>{
                 e.preventDefault()
-                const nuevoArray = listaNombre.map(item =>
-                    item.id === id ? {id:id, name:nombre} : item)
-                    setListaNombre(nuevoArray)
+                const nuevoArray = listaCiudades.map(item =>
+                    item.id === id ? {id:id, name:ciudad} : item)
+                    setListaCiudades(nuevoArray)
                     setEditar(false)
             }
             
             //funcion que imprima por consola el value del input
-            const verValor = (e) =>{
-                console.log(e.target.value)
-            }
+           
     
+            //crea una funcion que reciba un parametro y lo busque en weather api
+            const getWeather = (e) =>{
+
+                let ciudad = e.target.value
+
+                fetch(`${API_URL}&q=${ciudad}&appid=${API_KEY}`)
+                .then(res => res.json())
+                .then(data =>{
+                    console.log(data)
+                })
+                .catch(err => console.log(err))
+            }
+
     
         return(
             <>
@@ -62,11 +78,11 @@ export default function CityList() {
                    
                         <ul className="">
                           {
-                              listaNombre.map(item => 
+                              listaCiudades.map(item => 
                                 <li key={item.id} className="">
-                                    <button onClick={verValor} value={item.name}>{item.name}</button>
+                                    <button onClick={getWeather} value={item.name}>{item.name}</button>
                                     <button className=""
-                                    onClick={ () => {deleteNombre(item.id)}}>
+                                    onClick={ () => {deleteCiudad(item.id)}}>
                                         Borrar
                                     </button>
                                     <button className=""
@@ -79,17 +95,17 @@ export default function CityList() {
                           }
                         </ul >
                   
-                            <form onSubmit={editar ? editarNombre : addNombre} className="">
+                            <form onSubmit={editar ? editarCiudad : addCiudad} className="">
                                     <input
-                                    placeholder="Ingrese el Ciudad"
+                                    placeholder="Ingrese la ciudad"
                                     className=""
                                     type="text"
-                                    onChange={(e) => {setNombre(e.target.value)}}
-                                    value={nombre}
+                                    onChange={(e) => {setCiudad(e.target.value)}}
+                                    value={ciudad}
                                     />
                     
                                     <input className=""
-                                    type="submit" value={editar ? "EDITAR Ciudad" : "REGISTRAR Ciudad"}/>
+                                    type="submit" value={editar ? "EDITAR" : "REGISTRAR"}/>
     
                             </form>
                             { error != null ? (
