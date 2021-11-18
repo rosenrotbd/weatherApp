@@ -11,7 +11,7 @@ export default function CityList() {
 
 
     
-
+        
         const [ciudad, setCiudad] = useState('')
         const [listaCiudades, setListaCiudades] = useState([])
         const [editar, setEditar] = useState(false)
@@ -75,7 +75,19 @@ export default function CityList() {
         return(
             <>
                 <View className="">
-                   
+                <form onSubmit={editar ? editarCiudad : addCiudad} className="">
+                                    <input
+                                    placeholder="Ingrese la ciudad"
+                                    className=""
+                                    type="text"
+                                    onChange={(e) => {setCiudad(e.target.value)}}
+                                    value={ciudad}
+                                    />
+                    
+                                    <input className=""
+                                    type="submit" value={editar ? "e" : "+"}/>
+    
+                            </form>
                         <ul className="">
                           {
                               listaCiudades.map(item => 
@@ -95,19 +107,7 @@ export default function CityList() {
                           }
                         </ul >
                   
-                            <form onSubmit={editar ? editarCiudad : addCiudad} className="">
-                                    <input
-                                    placeholder="Ingrese la ciudad"
-                                    className=""
-                                    type="text"
-                                    onChange={(e) => {setCiudad(e.target.value)}}
-                                    value={ciudad}
-                                    />
-                    
-                                    <input className=""
-                                    type="submit" value={editar ? "EDITAR" : "REGISTRAR"}/>
-    
-                            </form>
+                           
                             { error != null ? (
                                     <>{error}</>
                                 ):
