@@ -1,6 +1,6 @@
 //react component
 import React , {useState} from 'react'
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import uniqid from 'uniqid'
 
 //weather api url
@@ -8,10 +8,8 @@ const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
 const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
 
 export default function CityList() {
-
-
-    
-        
+        const [title, setTitle] = useState()//esto es temporal, es para ver los datos en el dom, despues se hara en otro componente
+        const [temp, setTemp] = useState(0)
         const [ciudad, setCiudad] = useState('')
         const [listaCiudades, setListaCiudades] = useState([])
         const [editar, setEditar] = useState(false)
@@ -66,7 +64,11 @@ export default function CityList() {
                 fetch(`${API_URL}&q=${ciudad}&appid=${API_KEY}`)
                 .then(res => res.json())
                 .then(data =>{
-                    console.log(data)
+                    //convierte a data a un objeto
+                    const {main:{temp}} = data
+                    let aux = temp-273.15
+                    setTemp(aux);
+            setTitle(data.name)
                 })
                 .catch(err => console.log(err))
             }
@@ -75,6 +77,8 @@ export default function CityList() {
         return(
             <>
                 <View className="">
+                    {//haz un operador ternario con tittle
+                    title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
                 <form onSubmit={editar ? editarCiudad : addCiudad} className="">
                                     <input
                                     placeholder="Ingrese la ciudad"
