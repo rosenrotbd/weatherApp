@@ -1,13 +1,13 @@
 //react component
 import React , {useState} from 'react'
 import { View, Text } from 'react-native';
-import uniqid from 'uniqid'
 
 //weather api url
 const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
 const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
 
 export default function CityList() {
+        const [uid, setUid] = useState(1)
         const [title, setTitle] = useState()//esto es temporal, es para ver los datos en el dom, despues se hara en otro componente
         const [temp, setTemp] = useState(0)
         const [ciudad, setCiudad] = useState('')
@@ -20,9 +20,10 @@ export default function CityList() {
             
             event.preventDefault()
             const nuevoCiudad = {
-                id:uniqid(),
+                id:uid,
                 name: ciudad
             }
+            setUid(uid+1)
             if(!ciudad.trim()){
                 setError("El Campo esta vacio")
                 return
