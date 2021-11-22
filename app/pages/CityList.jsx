@@ -77,8 +77,7 @@ export default function CityList() {
         return(
             <>
                 <View className="">
-                    {//haz un operador ternario con tittle
-                    title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
+                    {title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
                 <form onSubmit={editar ? editarCiudad : addCiudad} className="">
                                     <input
                                     placeholder="Ingrese la ciudad"
