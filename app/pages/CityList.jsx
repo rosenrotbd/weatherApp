@@ -1,24 +1,33 @@
 //react component
 import React , {useState} from 'react'
-import { View, Text, TextInput  } from 'react-native';
+import { View, Text, TextInput, Dimensions } from 'react-native';
 import { Button, ListItem} from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import CityInfo from './CityInfo';
+import Default from './Default';
 
 import { Ionicons } from '@expo/vector-icons';
-//weather api url
+
+
+
+
+
 const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
 const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
 
 export default function CityList() {
+
+        const { height } = Dimensions.get('window');
         const [uid, setUid] = useState(1)
-        const [title, setTitle] = useState()//esto es temporal, es para ver los datos en el dom, despues se hara en otro componente
+        const [title, setTitle] = useState()
         const [temp, setTemp] = useState(0)
+        const [weather, setWeather] = useState()
         const [ciudad, setCiudad] = useState('')
         const [listaCiudades, setListaCiudades] = useState([])
         const [editar, setEditar] = useState(false)
         const [id, setId] = useState('')
         const [error, setError] = useState(null)
-    
-    
 
         const addCiudad = (ciudad) => {
             if(ciudad !== ''){
@@ -28,11 +37,9 @@ export default function CityList() {
             setError(null)}
             else{
                 alert('Ingrese una ciudad')
-            }
+                }
 
-    
-}
-        
+        }   
     
             const deleteCiudad =(id)=>{
                 const nuevoArray = listaCiudades.filter(item => item.id !== id)
@@ -43,7 +50,6 @@ export default function CityList() {
                 setEditar(true)
                 setCiudad(item.name)
                 setId(item.id)
-                
             }
     
             const editarCiudad = (ciudad) =>{
@@ -56,42 +62,45 @@ export default function CityList() {
             
             
             const getWeather = (e) =>{
-
                 let ciudad = e
                 console.log(ciudad)
                 fetch(`${API_URL}&q=${ciudad}&appid=${API_KEY}`)
                 .then(res => res.json())
                 .then(data =>{
+                    const info = data
+                    setWeather(info)
                     const {main:{temp}} = data
                     let aux = temp-273.15
                     setTemp(aux);
+                    
             setTitle(data.name)
                 })
                 .catch(err => console.log(err))
             }
-
         return(
             <>
                 <View>
+                    
                     <View
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            paddingHorizontal: 20,
                             paddingVertical: 10,
                             backgroundColor: '#fff',
-                            borderBottomWidth: 1,
-                            borderBottomColor: '#ddd'
-                        }}
-                    >
+                            flex: 1,
+                        }}>
+
+                    
+                        
                     </View>
+                    
                     <View
                         style={{
                             marginTop: 20,
                             marginHorizontal: 20
                         }}
-                        >
+                        >{weather ? <CityInfo info={weather}/> : <Default/>}
                     
                 
                                     <TextInput
@@ -122,7 +131,9 @@ export default function CityList() {
 
                                     />
                     
-                    {title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
+                   
+                    <ScrollView style={{marginBottom: height / 2,}}scrollEnabled={true}>
+                         <View>
                           {
                               listaCiudades.map(item => 
                                 <ListItem style={{
@@ -171,15 +182,20 @@ export default function CityList() {
                                 </ListItem> 
                                 )
                           }
+                            </View>
+                          
+                          </ScrollView> 
                    </View>
                   { error != null ? (
                                     <Text>{error}</Text>
                                 ):
                                     (<Text> </Text>)
                             }
+                            
                 </View>
             </>
         )
     
+
 
 }
