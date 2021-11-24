@@ -1,15 +1,18 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Image, Dimensions } from 'react-native'
 
 export default function Default() {
+
+    //declara dimensions
+    const { width, height } = Dimensions.get('window')
+
     return (
         <>
             <View>
-                <Text>Ciudad:</Text>
-                <Text>Pais: </Text>
-                <Text>Temperatura:</Text>
-                <Text>Descripcion:</Text>
-                <Text>Viento:</Text>
+               <Image source={ require('../resources/6191052.jpg')}
+                style={{ width: width, height: height / 6 ,
+                        alignSelf: 'center'
+                }} />
             </View>
         </>
     )

@@ -119,7 +119,7 @@ export default function CityList() {
                                     
                                     <Button
                                     type="submit"
-                                    title={editar ? <Text>Confirmar</Text> : <Text>Agregar</Text>}
+                                    title={editar ? <Text>Confirmar cambios </Text> : <Text>Agregar nueva ciudad</Text>}
                                     buttonStyle={{
                                         width: "100%",
                                         borderRadius: 0,
