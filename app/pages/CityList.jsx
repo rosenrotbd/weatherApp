@@ -1,7 +1,9 @@
 //react component
 import React , {useState} from 'react'
-import { View, Text } from 'react-native';
+import { View, Text, TextInput  } from 'react-native';
+import { Button, ListItem} from 'react-native-elements';
 
+import { Ionicons } from '@expo/vector-icons';
 //weather api url
 const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
 const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
@@ -16,24 +18,21 @@ export default function CityList() {
         const [id, setId] = useState('')
         const [error, setError] = useState(null)
     
-        const addCiudad = (event) => {
-            
-            event.preventDefault()
-            const nuevoCiudad = {
-                id:uid,
-                name: ciudad
-            }
+    
+
+        const addCiudad = (ciudad) => {
+            if(ciudad !== ''){
+            setListaCiudades([...listaCiudades, {id: uid, name: ciudad}])
             setUid(uid+1)
-            if(!ciudad.trim()){
-                setError("El Campo esta vacio")
-                return
-            }
-            else{setListaCiudades([...listaCiudades,nuevoCiudad])
             setCiudad('')
-            setError(null)
-    }
-            
-        }
+            setError(null)}
+            else{
+                alert('Ingrese una ciudad')
+            }
+
+    
+}
+        
     
             const deleteCiudad =(id)=>{
                 const nuevoArray = listaCiudades.filter(item => item.id !== id)
@@ -44,28 +43,25 @@ export default function CityList() {
                 setEditar(true)
                 setCiudad(item.name)
                 setId(item.id)
+                
             }
     
-            const editarCiudad = (e) =>{
-                e.preventDefault()
+            const editarCiudad = (ciudad) =>{
                 const nuevoArray = listaCiudades.map(item =>
                     item.id === id ? {id:id, name:ciudad} : item)
                     setListaCiudades(nuevoArray)
                     setEditar(false)
+                    setCiudad('')
             }
             
-            //funcion que imprima por consola el value del input
-           
-    
-            //crea una funcion que reciba un parametro y lo busque en weather api
+            
             const getWeather = (e) =>{
 
-                let ciudad = e.target.value
-
+                let ciudad = e
+                console.log(ciudad)
                 fetch(`${API_URL}&q=${ciudad}&appid=${API_KEY}`)
                 .then(res => res.json())
                 .then(data =>{
-                    //convierte a data a un objeto
                     const {main:{temp}} = data
                     let aux = temp-273.15
                     setTemp(aux);
@@ -74,48 +70,112 @@ export default function CityList() {
                 .catch(err => console.log(err))
             }
 
-    
         return(
             <>
-                <View className="">
-                    {title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
-                <form onSubmit={editar ? editarCiudad : addCiudad} className="">
-                                    <input
+                <View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            backgroundColor: '#fff',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#ddd'
+                        }}
+                    >
+                    </View>
+                    <View
+                        style={{
+                            marginTop: 20,
+                            marginHorizontal: 20
+                        }}
+                        >
+                    
+                
+                                    <TextInput
+                                    style={{
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        padding: 10,
+                                        margin: 10,
+                                    }}
                                     placeholder="Ingrese la ciudad"
-                                    className=""
                                     type="text"
-                                    onChange={(e) => {setCiudad(e.target.value)}}
+                                    onChangeText={((value) => {setCiudad(value)} )}
                                     value={ciudad}
                                     />
+
+                                    
+                                    <Button
+                                    type="submit"
+                                    title={editar ? <Text>Confirmar</Text> : <Text>Agregar</Text>}
+                                    buttonStyle={{
+                                        width: "100%",
+                                        borderRadius: 0,
+                                        marginBottom: 10,
+                                    }}
+                                    
+                                   onPress={() => {   editar ? editarCiudad(ciudad) : addCiudad(ciudad)}}
+
+
+                                    />
                     
-                                    <input className=""
-                                    type="submit" value={editar ? "e" : "+"}/>
-    
-                            </form>
-                        <ul className="">
+                    {title ? <Text>La temperatura en {title} es {Math.round(temp)}°</Text> : <Text>Elige una ciudad</Text>}
                           {
                               listaCiudades.map(item => 
-                                <li key={item.id} className="">
-                                    <button onClick={getWeather} value={item.name}>{item.name}</button>
-                                    <button className=""
-                                    onClick={ () => {deleteCiudad(item.id)}}>
-                                        Borrar
-                                    </button>
-                                    <button className=""
-                                    onClick={ () => {edit(item)}}>
-                                        Editar
-                                    </button>
+                                <ListItem style={{
+                                    marginVertical: 10,
+                                }}
+                                
+                                key={item.id}>
+
+                                    <View style={{flexDirection: 'row',
                                     
-                                </li> 
+                                    alignItems:"stretch", width:"50%",color:"#000"}}>
+                                    <Button onPress={() => getWeather(item.name)} value={item.name} title={item.name} type="outline">
+                                    </Button>
+                                   </View>
+
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-end',
+                                        alignItems: 'stretch',
+                                        width: "50%",
+                                    }}>
+                                   
+                                    <Button 
+                                    buttonStyle={{
+                                        flexDirection: 'column',
+                                        backgroundColor: '#ff0000',
+                                        marginRight: 5,
+                                    }}
+                                    icon={<Ionicons name="md-trash" size={20} color="white" />}
+                                    onPress={ () => {deleteCiudad(item.id)}}>
+                                    </Button>
+
+                                    <Button
+                                    buttonStyle={{
+                                        flexDirection: 'column',
+                                        marginRight: 5,
+                                    }}
+                                    onPress={ () => {edit(item)}}
+                                    icon={<Ionicons name="md-create" size={20} color="white" />}
+                                    >
+                                        
+                                    </Button>
+                                    </View>
+                                    
+                                    
+                                </ListItem> 
                                 )
                           }
-                        </ul >
-                  
-                           
-                            { error != null ? (
-                                    <>{error}</>
+                   </View>
+                  { error != null ? (
+                                    <Text>{error}</Text>
                                 ):
-                                    (<> </>)
+                                    (<Text> </Text>)
                             }
                 </View>
             </>
