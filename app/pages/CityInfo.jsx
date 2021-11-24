@@ -25,7 +25,9 @@ export default function CityInfo(info) {
                 <View style={{
                     flexDirection: 'row-reverse',
                     paddingHorizontal: width / 10,
-                }}><Text>Temperatura: {(main.temp - 273.15).toFixed(2)}</Text></View>
+                }}><Text style={{
+                    fontSize: 30,
+                }}>{(main.temp - 273.15).toFixed(2)} C°</Text></View>
             </View>
         </>
     )
