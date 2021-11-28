@@ -12,9 +12,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 
-
-const API_URL = 'http://api.openweathermap.org/data/2.5/weather?'
-const API_KEY = 'f0f8a8ff5f107bd8acf6a84fec1d4a99'
+//conseguir url de la api
+const API_URL = ''
+const API_KEY = ''
 
 export default function CityList() {
 
@@ -80,35 +80,13 @@ export default function CityList() {
         return(
             <>
                 <View>
-                    
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            paddingVertical: 10,
-                            backgroundColor: '#fff',
-                            flex: 1,
-                        }}>
-
-                    
-                        
-                    </View>
-                    
-                    <View
-                        style={{
-                            marginTop: 20,
-                            marginHorizontal: 20
-                        }}
-                        >{weather ? <CityInfo info={weather}/> : <Default/>}
-                    
-                
-                                    <TextInput
+                     <TextInput
                                     style={{
                                         borderColor: '#000',
                                         borderWidth: 1,
                                         padding: 10,
                                         margin: 10,
+                                        marginTop: 30,
                                     }}
                                     placeholder="Ingrese la ciudad"
                                     type="text"
@@ -131,6 +109,15 @@ export default function CityList() {
 
                                     />
                     
+                    <View
+                        style={{
+                            marginTop: 20,
+                            marginHorizontal: 20
+                        }}
+                        >{weather ? <CityInfo info={weather}/> : <Default/>}
+                    
+                
+                                   
                    
                     <ScrollView style={{marginBottom: height / 2,}}scrollEnabled={true}>
                          <View>

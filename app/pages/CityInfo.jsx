@@ -20,8 +20,6 @@ export default function CityInfo(info) {
         <Image source={{uri: `https://flagcdn.com/16x12/${sys.country.toLowerCase()}.png`}}
         style={{  width: 16, height: 12 }} /></Text>
                 
-                <Text>Descripcion: {weather[0].description}</Text>
-                <Text>Viento: {wind.speed}</Text>
                 <View style={{
                     flexDirection: 'row-reverse',
                     paddingHorizontal: width / 10,
